@@ -19,10 +19,10 @@ public class SpuDetail {
 
     //商品描述
     private String description;
-    @Column(name = "specifications")
+
     //通用规格参数数据
     private String genericSpec;
-    @Column(name = "spec_template")
+
     //特殊规格参数数据
     private String specialSpec;
 

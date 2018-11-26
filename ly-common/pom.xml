@@ -11,7 +11,7 @@
 
     <groupId>com.leyou.common</groupId>
     <artifactId>ly-common</artifactId>
-
+    <version>0.0.1-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
