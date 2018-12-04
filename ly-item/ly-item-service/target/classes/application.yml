@@ -24,3 +24,6 @@ eureka:
 logging:
   level:
      com.leyou.item.mapper : debug
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000

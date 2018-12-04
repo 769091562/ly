@@ -16,7 +16,7 @@ zuul:
   routes:
     item-service: /item/**
     user-service: /user/**
-    auth-service: /auth/**
+    #auth-service: /auth/**
     cart-service: /cart/**
     order-service: /order-service/**
     upload-service:
@@ -34,8 +34,8 @@ hystrix:
           thread:
             timeoutInMilliseconds: 7000
 ribbon:
-  connetTimeout: 500
-  readTimeout: 5000
+  connetTimeout: 50000
+  readTimeout: 50000
   eureka:
       enabled: true
 ly:
@@ -44,7 +44,7 @@ ly:
     cookieName: LY_TOKEN # cookie的名称
   filter:
     allowPaths:
-    - /api/auth
+    #- /api/auth
     - /api/search
     - /api/user/register
     - /api/user/check

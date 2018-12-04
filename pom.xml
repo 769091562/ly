@@ -13,7 +13,8 @@
 		<module>ly-common</module>
         <module>ly-upload</module>
 		<module>ly-search</module>
-	</modules>
+        <module>ly-goods-page</module>
+    </modules>
 	<packaging>pom</packaging>
 
 	<name>leyou</name>
