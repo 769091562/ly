@@ -11,6 +11,7 @@ import com.leyou.item.pojo.*;
 import com.leyou.item.service.GoodsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +47,8 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private StockMapper stockMapper;
 
-    //@Autowired
-    //private AmqpTemplate amqpTemplate;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @Override
     public PageResult<Spu> querySpuByPage(Integer page, Integer rows, String key, Boolean saleable) {
@@ -152,7 +153,7 @@ public class GoodsServiceImpl implements GoodsService {
         saveSkuAndStock(spu);
 
         //发送消息
-        //sendMessage(spu.getId(), "insert");
+        sendMessage(spu.getId(), "insert");
 
     }
 
@@ -319,7 +320,7 @@ public class GoodsServiceImpl implements GoodsService {
      */
     private void sendMessage(Long id, String type) {
         try {
-            //amqpTemplate.convertAndSend("item." + type, id);
+            amqpTemplate.convertAndSend("item." + type, id);
         } catch (Exception e) {
             log.error("{}商品消息发送异常，商品ID：{}", type, id, e);
         }

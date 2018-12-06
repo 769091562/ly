@@ -57,5 +57,10 @@
             <artifactId>ly-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--mq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
     </dependencies>
 </project>

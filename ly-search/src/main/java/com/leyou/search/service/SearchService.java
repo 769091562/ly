@@ -17,7 +17,6 @@ import com.leyou.search.pojo.SearchResult;
 import com.leyou.search.repository.GoodsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.index.mapper.ObjectMapper;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -28,15 +27,13 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SourceFilter;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
@@ -382,36 +379,29 @@ public class SearchService {
         return basicQuery;
     }
 
-    /**
-     * 插入或更新索引
-     *
-     * @param id
-     */
-    @Transactional
-    public void insertOrUpdate(Long id) {
-        Spu spu = goodsClient.querySpuBySpuId(id);
-        if (spu == null) {
-            log.error("索引对应的spu不存在，spuId:{}", id);
+    public void createIndex(Long id) throws IOException {
+        // 查询spu
+        Spu spu = this.goodsClient.querySpuBySpuId(id);
+        if(null!=spu){
+            log.error("索引对应的spu不存在，spuId：{}", id);
+            // 抛出异常，让消息回滚
             throw new RuntimeException();
         }
-        try {
-            Goods goods = buildGoods(spu);
+        Goods goods;
+        try{
+            goods= buildGoods(spu);
             //保存到索引库
             repository.save(goods);
-        } catch (IOException e) {
+        }catch (Exception e){
             log.error("构建商品失败", e);
             throw new RuntimeException();
         }
-
+        // 保存数据到索引库
+        this.repository.save(goods);
     }
 
-    /**
-     * 删除索引
-     *
-     * @param id
-     */
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public void deleteIndex(Long id) {
+        this.repository.deleteById(id);
     }
 
 }
